@@ -50,6 +50,18 @@ class DailyQuote extends Command
         // Setting up a randon word from the quotes array
         $key = array_rand($quotes);
         $data = $quotes[$key];
-        return 0;
+
+        $users = User::all();
+        foreach($user as $user) {
+            // Mail::raw() sends raw mail without using view
+            Mail::raw("{$key} -> {$data}", function ($mail) use ($user) {
+                $mail->from('ghostdeveloper6@gmail.com');
+                $mail->to($user->email)->subject('Daily Quotes!');
+            });
+        }
+
+        $this-info('Successfuly sent daily quotes to everyone.');
+        
+        // return 0;
     }
 }
